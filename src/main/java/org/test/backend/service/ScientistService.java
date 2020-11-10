@@ -65,4 +65,7 @@ public class ScientistService {
     public long getCount (){
       return  scientistRepository.getCount();
     }
+    public int getIntCount (){
+      return  scientistRepository.getIntCount();
+    }
 }

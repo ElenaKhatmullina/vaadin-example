@@ -7,6 +7,7 @@ import com.vaadin.addon.pagination.PaginationChangeListener;
 import com.vaadin.addon.pagination.PaginationResource;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.*;
@@ -28,20 +29,42 @@ public class MyUI extends UI {
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
-        final int page = 1;
-        final int limit = 10;
 
-        final List<Scientist> scientists = scientistService.findPage(0, limit);
-        final long total = scientistService.getCount();
-        System.out.println("total: "+total);
+        DataProvider<Scientist, Void> dataProvider =
+                DataProvider.fromCallbacks(
+                        // First callback fetches items based on a query
+                        query -> {
+                            // The index of the first item to load
+                            int offset = query.getOffset();
 
-        final Grid <Scientist> table = createTable(scientists);
-        final Pagination pagination = createPagination(total, page, limit);
-        pagination.addPageChangeListener((PaginationChangeListener) event -> table.setItems(scientistService.findPage(event.fromIndex(), limit)));
+                            // The number of items to load
+                            int limit = query.getLimit();
+
+                            List<Scientist> scientists0 = getScientistService()
+                                    .findPage(offset, limit);
+
+                            return scientists0.stream();
+                        },
+                        // Second callback fetches the total number of items currently in the Grid.
+                        // The grid can then use it to properly adjust the scrollbars.
+                        query -> getScientistService().getIntCount());
+
+
+        Grid<Scientist> grid = new Grid<>();
+        grid.setSizeFull();
+        /*grid.setColumns("newId","name","discovery");*/
+        grid.addColumn(Scientist::getnewId);
+        grid.addColumn(Scientist::getName);
+        grid.addColumn(Scientist::getDiscovery);
+// add some Beans to grid
+        grid.recalculateColumnWidths();
+        grid.setDataProvider(dataProvider);
 
         final Scientist scientist = new Scientist();
         Button save;
         final VerticalLayout layout = new VerticalLayout();
+
+
 
         Label label=new Label("Добавление еще одного великого ученого в список");
         Label label3=new Label("Получила из котлин класса: "+ new FirstMyKotlin().getNumberFive());
@@ -57,9 +80,9 @@ public class MyUI extends UI {
         save.setWidth("100%");
 
         save.addClickListener(event -> {
-            if ((scientistName.getValue()!=null)&&(discovery.getValue()!=null)&&(scientistName.getValue()!="")&&(discovery.getValue()!="")) {
-                scientist.setName(scientistName.getValue().toString());
-                scientist.setDiscovery(discovery.getValue().toString());
+            if ((scientistName.getValue()!=null)&&(discovery.getValue()!=null)&&(!scientistName.getValue().equals(""))&&(!discovery.getValue().equals(""))) {
+                scientist.setName(scientistName.getValue());
+                scientist.setDiscovery(discovery.getValue());
                 scientistService.add(scientist);
 
                 Notification.show(scientistName.getValue()+ (" добавлен в список"));
@@ -70,40 +93,21 @@ public class MyUI extends UI {
                 discovery.clear();
 
                 final long total2 = scientistService.getCount();
-                int fromIndex=((int)(total2/limit))*limit;
-
-                final List<Scientist> scientists2 = scientistService.findPage(fromIndex, limit);
-                pagination.lastClick();
-                table.setItems(scientists2);
             }
             else{Notification.show("не все поля заполнены!", Notification.Type.ERROR_MESSAGE);}
         });
         Label label2=new Label("Список уже добавленных ученых");
         label2.addStyleName ( ValoTheme.LABEL_H3 );
         setSizeFull();
-        layout.addComponents(scientistName,discovery,save,label2,pagination,table);
+        layout.addComponents(scientistName,discovery,save,label2);
+        layout.addComponent(grid);
+
         setContent(layout);
     }
 
-    private  Grid <Scientist> createTable(List<Scientist> users) {
-
-        final Grid<Scientist> table = new Grid<>(Scientist.class);
-        table.setSizeFull();
-        table.setSizeFull();
-        table.setColumns("newId","name","discovery");
-        table.recalculateColumnWidths();
-        table.setItems(users);
-
-        return table;
+    private ScientistService getScientistService() {
+        return scientistService;
     }
-
-    private Pagination createPagination(long total, int page, int limit) {
-        final PaginationResource paginationResource = PaginationResource.newBuilder().setTotal(total).setPage(page).setLimit(limit).build();
-        final Pagination pagination = new Pagination(paginationResource);
-        pagination.setItemsPerPage(10, 20, 50, 100);
-        return pagination;
-    }
-
 
     @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
     @VaadinServletConfiguration(ui = MyUI.class, productionMode = false)

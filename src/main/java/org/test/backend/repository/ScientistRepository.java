@@ -15,7 +15,7 @@ import java.util.Map;
 public class ScientistRepository {
 
     private static ScientistRepository instance;
-    OrientGraphFactory orientGraphFactory = new OrientGraphFactory("remote:localhost/ScientistBase", "root", "root").setupPool(2,10);
+   private OrientGraphFactory orientGraphFactory = new OrientGraphFactory("remote:localhost/ScientistBase", "root", "root").setupPool(2,10);
 
     private ScientistRepository(){
 
@@ -46,7 +46,7 @@ public class ScientistRepository {
 */
         List<OrientVertex> vertices=new ArrayList<>();
         Iterable<Vertex> indexVertices = orientGraph.command(new OCommandSQL("SELECT FROM INDEX:indexforNEWID where key > ? LIMIT ?")).execute((fromIndex-1), limit);
-        OrientVertex indexVertex=null;
+        OrientVertex indexVertex;
         for (Object oo : indexVertices) {
             indexVertex = (OrientVertex) oo;
             OrientVertex v1 = indexVertex.getProperty("rid");
@@ -118,6 +118,17 @@ public class ScientistRepository {
         orientGraph.shutdown();
         return count;
     }
+
+    public int  getIntCount()
+    {
+        OrientGraph orientGraph = orientGraphFactory.getTx();
+        Iterable countIterable= orientGraph.command(new OCommandSQL("select count(*) from Scientist")).execute();
+
+        int count=((Number)((Vertex)(countIterable.iterator().next())).getProperty("count")).intValue();
+        orientGraph.shutdown();
+        return count;
+    }
+
     public void createIndexOnNewId(){
         OrientGraph orientGraph = orientGraphFactory.getTx();
         orientGraph.command(new OCommandSQL("CREATE INDEX indexforNEWID ON Scientist (newId) UNIQUE")).execute();
