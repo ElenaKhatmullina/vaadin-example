@@ -50,9 +50,10 @@ public class ScientistService {
         List <OrientVertex> list=scientistRepository.findPage(fromIndex,limit);
 
         for (OrientVertex ov : list) {
-            scientists.add(new Scientist(ov));
+            Scientist newScientist=new Scientist(ov);
+            scientists.add(newScientist);
             System.out.println("выбрали: "+ov.getId());
-
+            System.out.println("scientist name: "+newScientist.getName());
         }
         return scientists;
 

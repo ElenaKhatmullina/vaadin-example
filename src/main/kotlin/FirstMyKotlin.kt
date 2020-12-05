@@ -1,5 +1,7 @@
 package org.test.backend.util
 
+fun hello()=println("hello world!")
+
 class FirstMyKotlin ()  {
     val a: Int = 1
     val b = 1   // Тип `Int` выведен автоматически
@@ -63,9 +65,11 @@ fun main(args: Array<String>){
     println()
     println(999)
     FirstMyKotlin().incrementX()
-    FirstMyKotlin().replaceAB()*/
+    FirstMyKotlin().replaceAB()
     println(FirstMyKotlin().max(15,13))
     println(FirstMyKotlin().parseInt("567"))
     println(FirstMyKotlin().getStringLength("567"))
+    */
+    hello()
 }
 

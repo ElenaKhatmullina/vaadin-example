@@ -53,7 +53,7 @@ public class MyUI extends UI {
         Grid<Scientist> grid = new Grid<>();
         grid.setSizeFull();
         /*grid.setColumns("newId","name","discovery");*/
-        grid.addColumn(Scientist::getnewId);
+        grid.addColumn(Scientist::getNewId);
         grid.addColumn(Scientist::getName);
         grid.addColumn(Scientist::getDiscovery);
 // add some Beans to grid
@@ -61,10 +61,9 @@ public class MyUI extends UI {
         grid.setDataProvider(dataProvider);
 
         final Scientist scientist = new Scientist();
+
         Button save;
         final VerticalLayout layout = new VerticalLayout();
-
-
 
         Label label=new Label("Добавление еще одного великого ученого в список");
         Label label3=new Label("Получила из котлин класса: "+ new FirstMyKotlin().getNumberFive());
@@ -96,6 +95,7 @@ public class MyUI extends UI {
             }
             else{Notification.show("не все поля заполнены!", Notification.Type.ERROR_MESSAGE);}
         });
+
         Label label2=new Label("Список уже добавленных ученых");
         label2.addStyleName ( ValoTheme.LABEL_H3 );
         setSizeFull();
