@@ -16,6 +16,8 @@ import org.test.backend.entity.Scientist;
 import org.test.backend.service.ScientistService;
 import kotlin.*;
 import org.test.backend.util.FirstMyKotlin;
+import org.test.backend.util.ForLearnLotlin;
+
 
 import java.util.List;
 
@@ -101,7 +103,7 @@ public class MyUI extends UI {
         setSizeFull();
         layout.addComponents(scientistName,discovery,save,label2);
         layout.addComponent(grid);
-
+      new  ForLearnLotlin().sayHello();
         setContent(layout);
     }
 
