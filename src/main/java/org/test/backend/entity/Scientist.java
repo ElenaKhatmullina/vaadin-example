@@ -1,3 +1,4 @@
+/*
 package org.test.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -64,11 +65,14 @@ public class Scientist {
         this.newId = newId;
     }
 
-    /*public OrientVertex getOrientVertex() {
+    */
+/*public OrientVertex getOrientVertex() {
         return orientVertex;
     }
 
     public void setOrientVertex(OrientVertex orientVertex) {
         this.orientVertex = orientVertex;
-    }*/
+    }*//*
+
 }
+*/
