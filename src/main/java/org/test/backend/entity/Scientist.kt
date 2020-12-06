@@ -1,12 +1,10 @@
 package org.test.backend.entity
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.tinkerpop.blueprints.impls.orient.OrientVertex
 
 class Scientist() {
-    /*@JsonIgnore
-    var orientVertex: OrientVertex?=_orientVertex*/
+
     var name:String=""
     var discovery:String=""
     var newId :Long=0
