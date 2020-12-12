@@ -51,6 +51,7 @@ public class MyUI extends UI {
                         // The grid can then use it to properly adjust the scrollbars.
                         query -> getScientistService().getIntCount());
 
+        system.out.println("WORK5555!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
         Grid<Scientist> grid = new Grid<>();
         grid.setSizeFull();
